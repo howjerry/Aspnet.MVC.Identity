@@ -76,7 +76,7 @@ namespace AspNetIdentity.App_Start
                 manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
-                // 設定兩因子驗證 (two factor authentication). 這邊示範使用簡訊及 Emails
+                // 設定雙因子驗證 (two factor authentication). 這邊示範使用簡訊及 Emails
                 //manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<Account>
                 //{
                 //    MessageFormat = "Your security code is {0}"

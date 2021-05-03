@@ -223,10 +223,6 @@
     <Content Include="plugins\jquery\jquery.min.js" />
     <Content Include="plugins\jquery\jquery.slim.js" />
     <Content Include="plugins\jquery\jquery.slim.min.js" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\Account\Views\SignUp\Index.cshtml" />
     <Content Include="dist\css\adminlte.css.map" />
     <Content Include="dist\css\adminlte.min.css.map" />
@@ -262,11 +258,6 @@
     <Content Include="plugins\icheck-bootstrap\LICENSE" />
     <Content Include="plugins\jquery\jquery.min.map" />
     <Content Include="plugins\jquery\jquery.slim.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Shared\_Inclued.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -308,11 +299,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Areas\Account\Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

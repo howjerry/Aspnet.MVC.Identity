@@ -18,7 +18,15 @@
     <link rel="stylesheet" href="@Url.Content("~/dist/css/adminlte.min.css")">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    @RenderSection("head",false)
+    <style>
+        pre code {
+            background-color: #eee;
+            border: 1px solid #999;
+            display: block;
+            padding: 20px;
+        }
+    </style>
+    @RenderSection("head", false)
 </head>
 <body class="hold-transition @(ViewBag.bodyclass ?? "sidebar-mini layout-fixed")">
     @RenderBody()
