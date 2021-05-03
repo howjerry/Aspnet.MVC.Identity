@@ -21,7 +21,7 @@ namespace AspNetIdentity.Data
 ```
 
 ## Custom
-<!--不客製跳至 Migration DataBase-->
+>不客製跳至 Migration DataBase
 
 ### 修改資料表名
 
