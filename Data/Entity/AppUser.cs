@@ -13,5 +13,7 @@ namespace AspNetIdentity.Data.Entity
         public bool IsDeleted { get; set; }
 
         public DateTime CreateDateTime { get; set; }
+
+        public byte[] ProfilePicture { get; set; }
     }
 }

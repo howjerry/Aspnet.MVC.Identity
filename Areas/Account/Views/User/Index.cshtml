@@ -1,0 +1,113 @@
+﻿@model AccountUserIndexModel
+@{
+    ViewBag.Title = "使用者管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>使用者管理</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home",new {area="" })">Home</a></li>
+                    <li class="breadcrumb-item active">使用者管理</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn bg-success" data-izimodal-open="#modal">
+                            <i class="fa fa-plus-square"></i> Create
+                        </a>
+                        <a id="reload" class="btn btn-primary text-white">
+                            <i class="fa fas fa-bolt"></i>
+                            Reload
+                        </a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" id="viewAll">
+                        @Html.Partial("_List", Model.Datas)
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- Modal structure -->
+<div id="modal">
+
+</div>
+@section scripts{
+    <script src="~/dist/js/demo.js"></script>
+    <script>
+        $(function () {
+            initDataTable();
+
+            $('#reload').click(function() {
+                loadData();
+            });
+
+            $("#modal").iziModal({
+                title: '新增使用者',
+                overlayClose: false,
+                fullscreen:true,
+                zindex: 9999,
+                transitionIn:'flipInX',
+                onOpening: function (modal) {
+                    modal.startLoading();
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("Create","User",new { area = "Account" })',
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            $("#modal .iziModal-content").html(res);
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    }).done(function () {
+                        modal.stopLoading();
+                    })
+                }
+            });
+        });
+
+        function loadData() {
+            $('#viewAll').load('@Url.Action("List", "User", new {area="Account" })', function () { initDataTable();});
+        }
+
+        function unobtrusiveComplete() {
+            $('#modal').iziModal('close');
+            loadData();
+        }
+
+        function initDataTable() {
+
+            $('#userTable').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "order": []
+            });
+        }
+    </script>
+}
