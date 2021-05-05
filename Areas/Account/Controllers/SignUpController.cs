@@ -16,10 +16,7 @@ namespace AspNetIdentity.Areas.Account.Controllers
         
 
         [HttpGet]
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public ActionResult Index() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -47,17 +44,15 @@ namespace AspNetIdentity.Areas.Account.Controllers
 
 
             var result = await UserManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
+            if (result.Succeeded) return Redirect("/Login");
+            
+            foreach (var item in result.Errors)
             {
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError("", item);
-                }
-                
-                return View(request);
+                ModelState.AddModelError("", item);
             }
+                
+            return View(request);
 
-            return Redirect("/Login");
         }
     }
 }
