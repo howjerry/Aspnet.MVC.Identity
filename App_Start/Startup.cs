@@ -1,12 +1,23 @@
 ﻿using AspNetIdentity.Data;
 using AspNetIdentity.Data.Entity;
+using Autofac;
+using Autofac.Integration.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 using System;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.Mvc;
 
 [assembly: OwinStartup(typeof(AspNetIdentity.App_Start.Startup))]
 
@@ -36,6 +47,17 @@ namespace AspNetIdentity.App_Start
                 }
             });
 
+            app.AddAutofacConfigurations();
+              
+            //NOTE: 新增角色
+            try
+            {
+                HttpContext.Current.GetOwinContext().GetUserManager<RoleManager<IdentityRole>>().CreateAsync(new IdentityRole("Guest"));
+            }
+            catch 
+            {
+                DependencyResolver.Current.GetService<ILogger>().Warning("Role 資料已經存在");
+            }
         }
     }
 
@@ -103,6 +125,66 @@ namespace AspNetIdentity.App_Start
             app.CreatePerOwinContext<RoleManager<IdentityRole>>((options, context) => new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context.Get<AppDbContext>())));
 
             return app;
+        }
+
+        public static IAppBuilder AddAutofacConfigurations(this IAppBuilder app)
+        {
+            var builder = new ContainerBuilder();
+
+            // STANDARD MVC SETUP:
+
+            // Register your MVC controllers.
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
+
+            //Register your Service
+            //==========================================================================================
+            builder.RegisterType<AppDbContext>()
+                    .As<AppDbContext>()
+                    .InstancePerLifetimeScope();
+            var columnOptions = new ColumnOptions
+            {
+                AdditionalColumns = new Collection<SqlColumn>
+                    {
+                        new SqlColumn
+                            {ColumnName = "UserName", PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength = 256},
+                    }
+            };
+            builder.Register<ILogger>((c, p) =>
+            {
+                return new LoggerConfiguration()
+                  //.Enrich.WithProperty("UserName", HttpContext.Current.User.Identity.Name)
+                  .Enrich.With<BaseEnricher>()
+                  .WriteTo
+                  .MSSqlServer(
+                                connectionString: WebConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString,
+                                sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs" },
+                                columnOptions: columnOptions)
+                  .CreateLogger();
+            }).SingleInstance();
+            //==========================================================================================
+            // Run other optional steps, like registering model binders,
+            // web abstractions, etc., then set the dependency resolver
+            // to be Autofac.
+            var container = builder.Build();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+
+            // OWIN MVC SETUP:
+            // Register the Autofac middleware FIRST, then the Autofac MVC middleware.
+            app.UseAutofacMiddleware(container);
+            app.UseAutofacMvc();
+
+            return app;
+        }
+    }
+    /// <summary>
+    /// Serilog 擴增欄位配置
+    /// </summary>
+    public class BaseEnricher : ILogEventEnricher
+    {
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+        {
+            var userName = HttpContext.Current.User?.Identity.Name;
+            logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName", userName));
         }
     }
 }

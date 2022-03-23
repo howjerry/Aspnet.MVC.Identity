@@ -1,0 +1,131 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AccountRoleIndexModel
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>角色管理</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home",new {area="" })">Home</a></li>
+                    <li class="breadcrumb-item active">角色管理</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn bg-success" data-izimodal-open="#modal">
+                            <i class="fa fa-plus-square"></i> Create
+                        </a>
+                        <a id="reload" class="btn btn-primary text-white">
+                            <i class="fa fas fa-bolt"></i>
+                            Reload
+                        </a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" id="viewAll">
+                        <div id="roleTable"></div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+@section scripts{
+    <script>
+    $(function () {
+        $('#reload').click(function () { $("#roleTable").jsGrid("refresh");})
+            $("#roleTable").jsGrid({
+                width: "100%",
+                height: "auto",
+
+                filtering: false,
+                inserting: true,
+                editing: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+
+                deleteConfirm: "Do you really want to delete client?",
+
+                pageIndex: 1,
+                pageSize: 6,
+                pageButtonCount: 15,
+                pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} of {pageCount}",
+                pagePrevText: "Prev",
+                pageNextText: "Next",
+                pageFirstText: "First",
+                pageLastText: "Last",
+                pageNavigatorNextText: "...",
+                pageNavigatorPrevText: "...",
+
+                deleteConfirm: "Do you really want to delete?",
+
+                controller: {
+                    loadData: function (filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "@Url.Action("List", "Role", new { area="Account"})",
+                            data: filter,
+                            dataType: "json"
+                        });
+                    },
+
+                    insertItem: function (item) {
+                        return $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("Insert", "Role", new { area= "Account" })",
+                            data: item,
+                            dataType: "json",
+                            success: function (data) {
+                                $("#jsGrid-basic").jsGrid("loadData");
+                            }
+                        });
+                    },
+
+                    updateItem: function (item) {
+                        return $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("Update", "Role", new { area= "Account" })",
+                            data: item,
+                            dataType: "json",
+                            success: function (data) {
+                                $("#jsGrid-basic").jsGrid("loadData");
+                            }
+                        });
+                    },
+
+                    deleteItem: function (item) {
+                        return $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("Delete", "Role", new { area=""})?ID="+ item.ID,
+                            success: function (data) {
+                                //$("#jsGrid-basic").jsGrid("loadData");
+                            }
+                        });
+                    }
+                },
+                fields: [
+                    { name: "Name", type: "text", validate: ["required", { validator: "maxLength", param: 35 }], css: "text-center" },
+                    { type: "control" }
+                ]
+            });
+    });
+
+    </script>
+}

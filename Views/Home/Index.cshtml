@@ -1,5 +1,5 @@
-﻿@model AspNetIdentity.Models.AccountLoginModel
-
+﻿@using Microsoft.AspNet.Identity;
+@using System.Security.Claims; 
 @{
     ViewBag.Title = "Profile";
 }
@@ -39,9 +39,9 @@
                         </div>
 
                         <h3 class="profile-username text-center">@User.Identity.Name</h3>
-                        @foreach (var item in ViewBag.Roles)
+                        @foreach (var item in (User.Identity as ClaimsIdentity).FindAll(x=> x.Type == ClaimTypes.Role))
                         {
-                            <p class="text-muted text-center">@item</p>
+                            <p class="text-muted text-center">@item.Value</p>
                         }
 
 
@@ -128,11 +128,7 @@
                                     </div>
                                     <!-- /.user-block -->
                                     <p>
-                                        Lorem ipsum represents a long-held tradition for designers,
-                                        typographers and the like. Some people hate it and argue for
-                                        its demise, but others ignore the hate as they create awesome
-                                        tools to help create filler text for everyone from bacon lovers
-                                        to Charlie Sheen fans.
+                                        @((User.Identity as ClaimsIdentity).FindFirstValue("Note"))
                                     </p>
 
                                     <p>

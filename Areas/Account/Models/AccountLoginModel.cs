@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 
 
-namespace AspNetIdentity.Models
+namespace AspNetIdentity.Areas.Account.Models
 {
     public class AccountLoginModel
     {
@@ -14,6 +14,8 @@ namespace AspNetIdentity.Models
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "未填寫密碼")]
         public string Password { get; set; }
-        public bool Remember { get; set; }
+        public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

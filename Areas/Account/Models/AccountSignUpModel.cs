@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AspNetIdentity.Models
+namespace AspNetIdentity.Areas.Account.Models
 {
     public class AccountSignUpModel
     {

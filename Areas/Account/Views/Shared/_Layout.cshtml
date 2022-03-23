@@ -17,8 +17,10 @@
     <link rel="stylesheet" href="@Url.Content("~/dist/css/adminlte.min.css")">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!--toastr-->
+    <link href="~/plugins/toastr.js/toastr.min.css" rel="stylesheet" />
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition @ViewBag.Boby">
     @RenderBody()
     <!-- /.login-box -->
     <!-- jQuery -->
@@ -27,6 +29,12 @@
     <script src="@Url.Content("~/plugins/bootstrap/js/bootstrap.bundle.min.js")"></script>
     <!-- AdminLTE App -->
     <script src="@Url.Content("~/dist/js/adminlte.min.js")"></script>
+    <!--toastr.js-->
+    <script src="~/plugins/toastr.js/toastr.min.js"></script>
+
+    <script src="~/plugins/toastr.js/app.js"></script>
+    @Html.Notify()
+
     @RenderSection("scripts", false)
 </body>
 </html>
