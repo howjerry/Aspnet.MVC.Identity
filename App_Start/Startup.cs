@@ -63,6 +63,8 @@ namespace AspNetIdentity.App_Start
 
     public static class AppBuilderExtensions
     {
+        //NOTE: CreatePerOwinContext註冊一個靜態回調，您的應用程序將使用該回調來取回指定類型的新實例。
+        //      此回調將在每個請求中調用一次，並將對象 / 對象存儲在OwinContext中，以便您能夠在整個應用程序中使用它們。
         public static IAppBuilder AddIdentityContexts(this IAppBuilder app)
         {
             app.CreatePerOwinContext(() => new AppDbContext());
